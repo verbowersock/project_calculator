@@ -13,6 +13,8 @@
       <change afterPath="$PROJECT_DIR$/frontend/client/src/components/Tabulation.js" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/frontend/client/src/components/Wood.js" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/frontend/client/src/components/useAsyncHook.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/client" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/client" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/client/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/client/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/client/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/client/public/index.html" afterDir="false" />
