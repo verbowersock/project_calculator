@@ -30,8 +30,8 @@ func (p productRepository) FindById(id int) (*products.Product, error) {
 	prod := new(products.Product)
 	err := db.QueryRow("SELECT * FROM product WHERE id = ?", id).Scan(&prod.ID, &prod.Name, &prod.Finish, &prod.Hours)
 	prod.Materials, _ = FindMats(prod.ID)
-	fees:= totals(prod)[0]
-	total:=totals(prod)[1]
+	fees := totals(prod)[0]
+	total := totals(prod)[1]
 	prod.Fees = fmt.Sprintf("%0.2f", fees)
 	prod.Total = fmt.Sprintf("%0.2f", total)
 	if err != nil {
@@ -45,31 +45,30 @@ func (p productRepository) FindById(id int) (*products.Product, error) {
 func (p productRepository) FindAll() ([]*products.Product, error) {
 	rows, err := p.db.Query("select product.id, product.name, product.finish, product.hours from product")
 	defer rows.Close()
-	prods :=make([]*products.Product, 0)
+	prods := make([]*products.Product, 0)
 	for rows.Next() {
 		prod := new(products.Product)
 		if err = rows.Scan(&prod.ID, &prod.Name, &prod.Finish, &prod.Hours); err != nil {
 			fmt.Printf("error: %s", err)
 			return nil, err
 		}
-			prod.Materials, _ = FindMats(prod.ID)
-			prods = append(prods, prod)
-			fees:= totals(prod)[0]
-			total:=totals(prod)[1]
-			prod.Fees = fmt.Sprintf("%0.2f", fees)
-			prod.Total = fmt.Sprintf("%0.2f", total)
-		}
-		return prods, nil
+		prod.Materials, _ = FindMats(prod.ID)
+		prods = append(prods, prod)
+		fees := totals(prod)[0]
+		total := totals(prod)[1]
+		prod.Fees = fmt.Sprintf("%0.2f", fees)
+		prod.Total = fmt.Sprintf("%0.2f", total)
 	}
+	return prods, nil
+}
 
-func FindMats (id int) 	([]*products.ProdMat, error) {
-	rows, err := db.Query("SELECT materials.ID, materials.board, materials.wood, materials.price, product_composition.quantity from product left join product_composition on product.ID=product_composition.prodID left join materials on materials.ID=product_composition.material where product.ID=? and materials.ID=product_composition.material", id)
+func FindMats(id int) ([]*products.ProdMat, error) {
+	rows, err := db.Query("SELECT materials.ID, board.board_size AS board, wood.wood AS wood, materials.price, product_composition.quantity from product left join product_composition on product.ID=product_composition.prodID left join materials on materials.ID=product_composition.material left join board on board.ID=materials.board left join wood on wood.ID=materials.wood where product.ID=? and materials.ID=product_composition.material", id)
 	defer rows.Close()
 	prodMats := make([]*products.ProdMat, 0)
 	for rows.Next() {
 		pm := new(products.ProdMat)
-		if err = rows.Scan(&pm.ID, &pm.Board, &pm.Wood, &pm.Price, &pm.Quantity);
-			err != nil {
+		if err = rows.Scan(&pm.ID, &pm.Board, &pm.Wood, &pm.Price, &pm.Quantity); err != nil {
 			fmt.Printf("error: %s", err)
 			return nil, err
 		}
@@ -79,22 +78,22 @@ func FindMats (id int) 	([]*products.ProdMat, error) {
 	return prodMats, nil
 }
 
-func totals (prod *products.Product) [] float32 {
+func totals(prod *products.Product) []float32 {
 	var fees float32 = 0
 	var matCost float32 = 0
 	var finCost float32 = 0
-	var total float32 =0
+	var total float32 = 0
 	var totalNums []float32
 	err := db.QueryRow("SELECT price FROM finishes left join product on product.finish = finishes.ID WHERE product.ID= ?", prod.ID).Scan(&finCost)
-		if err != nil{
-			return nil
+	if err != nil {
+		return nil
 	}
-	for _, i:= range prod.Materials {
+	for _, i := range prod.Materials {
 		matCost += i.Price * float32(i.Quantity)
 	}
-	fees = (matCost + finCost + (prod.Hours*25)) *0.1
+	fees = (matCost + finCost + (prod.Hours * 25)) * 0.1
 	totalNums = append(totalNums, fees)
-	total = matCost + finCost + (prod.Hours*25) + fees
+	total = matCost + finCost + (prod.Hours * 25) + fees
 	totalNums = append(totalNums, total)
 	return totalNums
 }
@@ -136,11 +135,10 @@ func (p productRepository) UpdateMatQ(pId int, mId int, qty int) (*products.Prod
 	return prod, nil
 }
 
-
 func (p productRepository) DeleteMat(pId int, mId int) error {
 	statement1, _ := db.Prepare("delete from product_composition where material=? and prodID=?")
 	defer statement1.Close()
-	_,err :=statement1.Exec(mId, pId)
+	_, err := statement1.Exec(mId, pId)
 	if err != nil {
 		return err
 	}
@@ -150,7 +148,7 @@ func (p productRepository) DeleteMat(pId int, mId int) error {
 func (p productRepository) Delete(id int) error {
 	statement1, _ := db.Prepare("delete from product_composition where prodID=?")
 	defer statement1.Close()
-	_,err1 :=statement1.Exec(id)
+	_, err1 := statement1.Exec(id)
 	if err1 != nil {
 		return err1
 	}
@@ -162,9 +160,8 @@ func (p productRepository) Delete(id int) error {
 	}
 	return nil
 }
-func NewProductRepository(db *sql.DB) products.ProductRepository{
+func NewProductRepository(db *sql.DB) products.ProductRepository {
 	return &productRepository{
 		db,
 	}
 }
-

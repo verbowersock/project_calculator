@@ -2,11 +2,12 @@ package main
 
 import (
 	"calculator/database"
+	"time"
+
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	cors "github.com/itsjamie/gin-cors"
 	_ "github.com/mattn/go-sqlite3"
-	"time"
 )
 
 var router *gin.Engine

@@ -8,9 +8,9 @@ import (
 
 var db *sql.DB
 
-func InitDB(datasource string) *sql.DB{
+func InitDB(datasource string) *sql.DB {
 	var err error
-	db, err = sql.Open("sqlite3", datasource)
+	db, err = sql.Open("sqlite3", datasource+"?_foreign_keys=on")
 	if err != nil {
 		log.Fatal(err)
 		fmt.Println("Failed to create the handle")

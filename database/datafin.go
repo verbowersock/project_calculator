@@ -68,11 +68,11 @@ func (f finishRepository) FindAll() ([]*finish.Finish, error) {
 	rows, err := f.db.Query("SELECT * FROM finishes")
 
 	defer rows.Close()
-	finishes :=make([]*finish.Finish, 0)
+	finishes := make([]*finish.Finish, 0)
 	for rows.Next() {
 		finish := new(finish.Finish)
-		if err = rows.Scan(&finish.ID, &finish.Finish, &finish.Stain); err != nil {
-			log.Fatal()
+		if err = rows.Scan(&finish.ID, &finish.Finish, &finish.Stain, &finish.Price); err != nil {
+			log.Fatal(err)
 			return nil, err
 		}
 		finishes = append(finishes, finish)
@@ -80,10 +80,8 @@ func (f finishRepository) FindAll() ([]*finish.Finish, error) {
 	return finishes, nil
 }
 
-
-func NewFinishRepository(db *sql.DB) finish.FinishRepository{
+func NewFinishRepository(db *sql.DB) finish.FinishRepository {
 	return &finishRepository{
 		db,
 	}
 }
-

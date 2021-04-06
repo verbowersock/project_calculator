@@ -58,7 +58,7 @@ func (w woodRepository) FindById(id int) (*wood.Wood, error) {
 func (w woodRepository) FindAll() ([]*wood.Wood, error) {
 	rows, err := w.db.Query("SELECT * FROM wood")
 	defer rows.Close()
-	woods :=make([]*wood.Wood, 0)
+	woods := make([]*wood.Wood, 0)
 	for rows.Next() {
 		wood := new(wood.Wood)
 		if err = rows.Scan(&wood.ID, &wood.Type); err != nil {
@@ -70,9 +70,8 @@ func (w woodRepository) FindAll() ([]*wood.Wood, error) {
 	return woods, nil
 }
 
-func NewWoodRepository(db *sql.DB) wood.WoodRepository{
+func NewWoodRepository(db *sql.DB) wood.WoodRepository {
 	return &woodRepository{
 		db,
 	}
 }
-
